@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!--  nameSpace必须指向Dao接口 -->
+<mapper namespace="com.wx.mapper.SysUserMapper">
+<!-- 根据用户名查询出一条用户 -->
+<select id="findUser" resultType="com.wx.model.SysUser">
+select userid,username,password,salt,department_key from sys_user where username = #{username};
+</select>
+<!-- 根据id查询出一条用户 -->
+<select id="findUserById" resultType="com.wx.model.SysUser">
+select userid,username,password,department_key from sys_user where userid = #{userid};
+</select>
+<!-- 根据用户id查询出用户的角色 -->
+<select id="findRole" resultType = "com.wx.model.SysRole">
+select * from sys_role where role_key in(select role_key from sys_user_role where user_id=#{userid});
+</select>
+
+<!-- 根据role_key查询出角色对应的权限 -->
+<select id="findPermissions" resultType="com.wx.model.SysAuthority">
+select * from sys_authority where menu_code in(select menu_code from sys_role_authority where role_key = #{role_key});
+</select>
+
+<!-- 添加用户 -->
+<insert id="addUser" parameterType="com.wx.model.SysUser">
+insert into sys_user(username,password,department_key,salt,flat)values("#{username},#{password},#{department_key},#{salt},#{flat}");
+</insert>
+
+<!-- 用户离职方法 -->
+<update id="deleteUser" parameterType="java.lang.Integer">
+update sys_user set flat = 0 where userid=#{userId};
+</update>
+
+<!-- 修改员工信息 -->
+<update id="updateUser" parameterType="com.wx.model.SysUser">
+update sys_user set username=#{username},password=#{password},department_key=#{department} where userid=#{userId};
+</update>
+
+</mapper>

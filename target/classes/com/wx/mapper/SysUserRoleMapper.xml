@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!--  nameSpace必须指向Dao接口 -->
+<mapper namespace="com.wx.mapper.SysUserRoleMapper">
+
+<!-- 根据角色名称查询role_key -->
+<select id="findRoleKey" resultType="String">
+select role_key from sys_role where role_value = #{role_value};
+</select>
+
+
+<!-- 在添加用户的同时，添加用户对应的角色 -->
+<insert id="addUserRole" parameterType="com.wx.model.SysUserRole">
+insert into sys_user_role (user_id,role_key) values (#{user_id},#{role_key});
+</insert>
+
+<!-- 根据用户id删除用户角色表中对应的用户信息 -->
+<delete id="deleteUR" parameterType="int">
+delete from sys_user_role where user_id=#{userId};
+</delete>
+
+</mapper>
